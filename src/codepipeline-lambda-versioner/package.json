@@ -1,0 +1,14 @@
+{
+  "name": "codepipeline-lambda-versioner",
+  "version": "1.0.0",
+  "description": "CodePipeline custom action to publish versions of Lambda functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Lafiosca <joe@lafiosca.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lard-codepipeline-lambda-versioner": "^1.0.0"
+  }
+}

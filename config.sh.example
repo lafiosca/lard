@@ -1,0 +1,7 @@
+#!/bin/bash
+
+S3Bucket=your-artifact-bucket
+S3Prefix=cloudformation/lard
+
+StackName=Lard
+

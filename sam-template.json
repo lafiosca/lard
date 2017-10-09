@@ -1,0 +1,74 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "AWS serverless deployment helper resources",
+    "Resources": {
+        "CodePipelineLambdaVersioner": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "FunctionName": { "Fn::Sub": "${AWS::StackName}-CodePipelineLambdaVersioner" },
+                "Handler": "index.handler",
+                "Runtime": "nodejs6.10",
+                "CodeUri": "src/codepipeline-lambda-versioner/export/dist.zip",
+                "MemorySize": 128,
+                "Timeout": 30,
+                "Description": "CodePipeline custom action to publish versions of Lambda functions",
+                "Policies": [
+                    "AmazonS3FullAccess",
+                    "AWSCodePipelineCustomActionAccess",
+                    {
+                        "Version" : "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": ["lambda:PublishVersion"],
+                                "Resource": "*"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "CodePipelineLambdaAliaser": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "FunctionName": { "Fn::Sub": "${AWS::StackName}-CodePipelineLambdaAliaser" },
+                "Handler": "index.handler",
+                "Runtime": "nodejs6.10",
+                "CodeUri": "src/codepipeline-lambda-aliaser/export/dist.zip",
+                "MemorySize": 128,
+                "Timeout": 30,
+                "Description": "CodePipeline custom action to alias Lambda function versions",
+                "Policies": [
+                    "AmazonS3FullAccess",
+                    "AWSCodePipelineCustomActionAccess",
+                    {
+                        "Version" : "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "lambda:UpdateAlias",
+                                    "lambda:CreateAlias"
+                                ],
+                                "Resource": "*"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "CodePipelineLambdaVersioner": {
+            "Description": "CodePipeline Lambda Versioner function name",
+            "Value": { "Ref": "CodePipelineLambdaVersioner" },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineLambdaVersioner" } }
+        },
+        "CodePipelineLambdaAliaser": {
+            "Description": "CodePipeline Lambda Aliaser function name",
+            "Value": { "Ref": "CodePipelineLambdaAliaser" },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineLambdaAliaser" } }
+        }
+    }
+}

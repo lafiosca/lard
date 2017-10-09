@@ -1,0 +1,16 @@
+{
+  "name": "lard",
+  "version": "1.0.0",
+  "description": "AWS serverless deployment helper resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Lafiosca <joe@lafiosca.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-install": "^0.6.0",
+    "gulp-zip": "^3.2.0"
+  }
+}
