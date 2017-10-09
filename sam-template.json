@@ -57,6 +57,19 @@
                     }
                 ]
             }
+        },
+        "NewCodePipelineS3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Condition": "CreateCodePipelineS3Bucket",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "BucketName": { "Fn::Sub": "codepipeline-artifacts-${AWS::Region}-${AWS::AccountId}" }
+            }
+        }
+    },
+    "Conditions": {
+        "CreateCodePipelineS3Bucket": {
+            "Fn::Equals": [{ "Ref": "CodePipelineS3Bucket" }, ""]
         }
     },
     "Outputs": {
@@ -69,6 +82,24 @@
             "Description": "CodePipeline Lambda Aliaser function name",
             "Value": { "Ref": "CodePipelineLambdaAliaser" },
             "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineLambdaAliaser" } }
+        },
+        "CodePipelineS3Bucket": {
+            "Description": "S3 Bucket for storing CodePipeline artifacts",
+            "Value": {
+                "Fn::If": [
+                    "CreateCodePipelineS3Bucket",
+                    { "Ref": "NewCodePipelineS3Bucket" },
+                    { "Ref": "CodePipelineS3Bucket" }
+                ]
+            },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineS3Bucket" } }
+        }
+    },
+    "Parameters": {
+        "CodePipelineS3Bucket": {
+            "Description": "Existing S3 Bucket for storing CodePipeline artifacts",
+            "Type": "String",
+            "Default": ""
         }
     }
 }

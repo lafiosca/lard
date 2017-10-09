@@ -5,3 +5,5 @@ S3Prefix=cloudformation/lard
 
 StackName=Lard
 
+CodePipelineS3Bucket=$S3Bucket
+
