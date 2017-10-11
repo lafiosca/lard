@@ -68,7 +68,7 @@
         },
         "CodePipelineServiceRole": {
             "Type": "AWS::IAM::Role",
-            "Condition": "CreateCodePipelineCloudFormationRole",
+            "Condition": "CreateCodePipelineServiceRole",
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
@@ -122,9 +122,9 @@
                 ]
             }
         },
-        "CodePipelineCloudFormationRole": {
+        "CodePipelineCloudFormationServiceRole": {
             "Type": "AWS::IAM::Role",
-            "Condition": "CreateCodePipelineCloudFormationRole",
+            "Condition": "CreateCodePipelineCloudFormationServiceRole",
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
@@ -150,8 +150,8 @@
         "CreateCodePipelineServiceRole": {
             "Fn::Equals": [{ "Ref": "CodePipelineServiceRoleArn" }, ""]
         },
-        "CreateCodePipelineCloudFormationRole": {
-            "Fn::Equals": [{ "Ref": "CreateCodePipelineCloudFormationAdminRole" }, "yes"]
+        "CreateCodePipelineCloudFormationServiceRole": {
+            "Fn::Equals": [{ "Ref": "CreateCodePipelineCloudFormationServiceRole" }, "yes"]
         }
     },
     "Outputs": {
@@ -187,11 +187,11 @@
             },
             "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineServiceRoleArn" } }
         },
-        "CodePipelineCloudFormationRole": {
-            "Condition": "CreateCodePipelineCloudFormationRole",
-            "Description": "CodePipeline service role for executing CloudFormation deployments",
-            "Value": { "Ref": "CodePipelineCloudFormationRole" },
-            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineCloudFormationRole" } }
+        "CodePipelineCloudFormationServiceRoleArn": {
+            "Condition": "CreateCodePipelineCloudFormationServiceRole",
+            "Description": "CloudFormation service role for use by CodePipeline",
+            "Value": { "Fn::GetAtt": ["CodePipelineCloudFormationServiceRole", "Arn"] },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineCloudFormationServiceRoleArn" } }
         }
     },
     "Parameters": {
@@ -205,8 +205,8 @@
             "Type": "String",
             "Default": ""
         },
-        "CreateCodePipelineCloudFormationAdminRole": {
-            "Description": "Value of yes or no indicating whether to create CodePipeline CloudFormation role with Administrator access",
+        "CreateCodePipelineCloudFormationServiceRole": {
+            "Description": "Value of yes or no indicating whether to create CodePipeline CloudFormation service role with Administrator access",
             "Default": "no",
             "Type": "String",
             "AllowedValues": ["yes", "no"],
