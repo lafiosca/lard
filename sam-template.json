@@ -65,11 +65,34 @@
             "Properties": {
                 "BucketName": { "Fn::Sub": "codepipeline-artifacts-${AWS::Region}-${AWS::AccountId}" }
             }
+        },
+        "CodePipelineCloudFormationRole": {
+            "Type": "AWS::IAM::Role",
+            "Condition": "CreateCodePipelineCloudFormationRole",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Principal": {
+                                "Service": "cloudformation.amazonaws.com"
+                            },
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/AdministratorAccess"],
+                "Path": "/"
+            }
         }
     },
     "Conditions": {
         "CreateCodePipelineS3Bucket": {
             "Fn::Equals": [{ "Ref": "CodePipelineS3Bucket" }, ""]
+        },
+        "CreateCodePipelineCloudFormationRole": {
+            "Fn::Equals": [{ "Ref": "CreateCodePipelineCloudFormationAdminRole" }, "yes"]
         }
     },
     "Outputs": {
@@ -93,13 +116,26 @@
                 ]
             },
             "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineS3Bucket" } }
+        },
+        "CodePipelineCloudFormationRole": {
+            "Condition": "CreateCodePipelineCloudFormationRole",
+            "Description": "CodePipeline service role for executing CloudFormation deployments",
+            "Value": { "Ref": "CodePipelineCloudFormationRole" },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineCloudFormationRole" } }
         }
     },
     "Parameters": {
         "CodePipelineS3Bucket": {
-            "Description": "Existing S3 Bucket for storing CodePipeline artifacts",
+            "Description": "Existing S3 Bucket for storing CodePipeline artifacts; if not provided, create",
             "Type": "String",
             "Default": ""
+        },
+        "CreateCodePipelineCloudFormationAdminRole": {
+            "Description": "Value of yes or no indicating whether to create CodePipeline CloudFormation role with Administrator access",
+            "Default": "no",
+            "Type": "String",
+            "AllowedValues": ["yes", "no"],
+            "ConstraintDescription": "must be yes or no"
         }
     }
 }

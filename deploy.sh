@@ -23,7 +23,7 @@ echo "Packaging CloudFormation template"
 aws cloudformation package --template-file sam-template.json --output-template-file sam-output.yml --s3-bucket "$S3Bucket" --s3-prefix "$S3Prefix"
 
 echo "Deploying CloudFormation stack $StackName"
-aws cloudformation deploy --template-file sam-output.yml --stack-name "$StackName" --capabilities CAPABILITY_IAM --parameter-overrides CodePipelineS3Bucket="$CodePipelineS3Bucket"
+aws cloudformation deploy --template-file sam-output.yml --stack-name "$StackName" --capabilities CAPABILITY_IAM --parameter-overrides CodePipelineS3Bucket="$CodePipelineS3Bucket" CreateCodePipelineCloudFormationAdminRole="$CreateCodePipelineCloudFormationAdminRole"
 
 echo "Removing SAM output template file"
 rm -f sam-output.yml
