@@ -122,9 +122,9 @@
                 ]
             }
         },
-        "CodePipelineCloudFormationServiceRole": {
+        "CloudFormationServiceRole": {
             "Type": "AWS::IAM::Role",
-            "Condition": "CreateCodePipelineCloudFormationServiceRole",
+            "Condition": "CreateCloudFormationServiceRole",
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
@@ -150,8 +150,8 @@
         "CreateCodePipelineServiceRole": {
             "Fn::Equals": [{ "Ref": "CodePipelineServiceRoleArn" }, ""]
         },
-        "CreateCodePipelineCloudFormationServiceRole": {
-            "Fn::Equals": [{ "Ref": "CreateCodePipelineCloudFormationServiceRole" }, "yes"]
+        "CreateCloudFormationServiceRole": {
+            "Fn::Equals": [{ "Ref": "CreateCloudFormationServiceRole" }, "yes"]
         }
     },
     "Outputs": {
@@ -187,11 +187,11 @@
             },
             "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineServiceRoleArn" } }
         },
-        "CodePipelineCloudFormationServiceRoleArn": {
-            "Condition": "CreateCodePipelineCloudFormationServiceRole",
+        "CloudFormationServiceRoleArn": {
+            "Condition": "CreateCloudFormationServiceRole",
             "Description": "CloudFormation service role for use by CodePipeline",
-            "Value": { "Fn::GetAtt": ["CodePipelineCloudFormationServiceRole", "Arn"] },
-            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineCloudFormationServiceRoleArn" } }
+            "Value": { "Fn::GetAtt": ["CloudFormationServiceRole", "Arn"] },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CloudFormationServiceRoleArn" } }
         }
     },
     "Parameters": {
@@ -205,8 +205,8 @@
             "Type": "String",
             "Default": ""
         },
-        "CreateCodePipelineCloudFormationServiceRole": {
-            "Description": "Value of yes or no indicating whether to create CodePipeline CloudFormation service role with Administrator access",
+        "CreateCloudFormationServiceRole": {
+            "Description": "Value of yes or no indicating whether to create CloudFormation service role with Administrator access",
             "Default": "no",
             "Type": "String",
             "AllowedValues": ["yes", "no"],
