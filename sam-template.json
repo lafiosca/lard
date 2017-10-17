@@ -65,11 +65,93 @@
             "Properties": {
                 "BucketName": { "Fn::Sub": "codepipeline-artifacts-${AWS::Region}-${AWS::AccountId}" }
             }
+        },
+        "CodePipelineServiceRole": {
+            "Type": "AWS::IAM::Role",
+            "Condition": "CreateCodePipelineServiceRole",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Principal": {
+                                "Service": "codepipeline.amazonaws.com"
+                            },
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "BasicCodePipelineServiceAccess",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "cloudwatch:*",
+                                        "s3:*",
+                                        "sns:*",
+                                        "cloudformation:*",
+                                        "iam:PassRole"
+                                    ],
+                                    "Resource": "*",
+                                    "Effect": "Allow"
+                                },
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction",
+                                        "lambda:ListFunctions"
+                                    ],
+                                    "Resource": "*",
+                                    "Effect": "Allow"
+                                },
+                                {
+                                    "Action": [
+                                        "codebuild:BatchGetBuilds",
+                                        "codebuild:StartBuild"
+                                    ],
+                                    "Resource": "*",
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "CodePipelineCloudFormationServiceRole": {
+            "Type": "AWS::IAM::Role",
+            "Condition": "CreateCodePipelineCloudFormationServiceRole",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Principal": {
+                                "Service": "cloudformation.amazonaws.com"
+                            },
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": ["arn:aws:iam::aws:policy/AdministratorAccess"],
+                "Path": "/"
+            }
         }
     },
     "Conditions": {
         "CreateCodePipelineS3Bucket": {
             "Fn::Equals": [{ "Ref": "CodePipelineS3Bucket" }, ""]
+        },
+        "CreateCodePipelineServiceRole": {
+            "Fn::Equals": [{ "Ref": "CodePipelineServiceRoleArn" }, ""]
+        },
+        "CreateCodePipelineCloudFormationServiceRole": {
+            "Fn::Equals": [{ "Ref": "CreateCodePipelineCloudFormationServiceRole" }, "yes"]
         }
     },
     "Outputs": {
@@ -93,13 +175,42 @@
                 ]
             },
             "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineS3Bucket" } }
+        },
+        "CodePipelineServiceRoleArn": {
+            "Description": "ARN of CodePipeline service role",
+            "Value": {
+                "Fn::If": [
+                    "CreateCodePipelineServiceRole",
+                    { "Fn::GetAtt": ["CodePipelineServiceRole", "Arn"] },
+                    { "Ref": "CodePipelineServiceRoleArn" }
+                ]
+            },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineServiceRoleArn" } }
+        },
+        "CodePipelineCloudFormationServiceRoleArn": {
+            "Condition": "CreateCodePipelineCloudFormationServiceRole",
+            "Description": "CloudFormation service role for use by CodePipeline",
+            "Value": { "Fn::GetAtt": ["CodePipelineCloudFormationServiceRole", "Arn"] },
+            "Export": { "Name": { "Fn::Sub": "${AWS::StackName}:CodePipelineCloudFormationServiceRoleArn" } }
         }
     },
     "Parameters": {
         "CodePipelineS3Bucket": {
-            "Description": "Existing S3 Bucket for storing CodePipeline artifacts",
+            "Description": "Existing S3 Bucket for storing CodePipeline artifacts; if not provided, create",
             "Type": "String",
             "Default": ""
+        },
+        "CodePipelineServiceRoleArn": {
+            "Description": "ARN of existing CodePipeline service role; if not provided, create",
+            "Type": "String",
+            "Default": ""
+        },
+        "CreateCodePipelineCloudFormationServiceRole": {
+            "Description": "Value of yes or no indicating whether to create CodePipeline CloudFormation service role with Administrator access",
+            "Default": "no",
+            "Type": "String",
+            "AllowedValues": ["yes", "no"],
+            "ConstraintDescription": "must be yes or no"
         }
     }
 }
