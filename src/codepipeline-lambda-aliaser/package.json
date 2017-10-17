@@ -9,6 +9,6 @@
   "author": "Joe Lafiosca <joe@lafiosca.com>",
   "license": "MIT",
   "dependencies": {
-    "lard-codepipeline-lambda-aliaser": "^1.0.0"
+    "lard-codepipeline-lambda-aliaser": "^1.1.0"
   }
 }

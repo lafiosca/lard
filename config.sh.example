@@ -7,5 +7,4 @@ StackName=Lard
 
 CodePipelineS3Bucket=$S3Bucket
 CodePipelineServiceRoleArn=""
-CreateCloudFormationServiceRole=yes
 
