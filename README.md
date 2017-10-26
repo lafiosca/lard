@@ -20,13 +20,17 @@ A collection of resources in support of AWS serverless continuous delivery.
 
 1. Copy `config.sh.example` to `config.sh` and modify it to suit your needs:
 
-    `S3Bucket`: an S3 bucket you have read/write access to for storing CloudFormation package artifacts
+    `S3Bucket`: an existing readable/writable S3 bucket for CloudFormation package artifact storage (no default; must be set)
 
-    `S3Prefix`: the path prefix to use for the package artifacts stored within `S3Bucket`
+    `S3Prefix`: the path prefix to use for the package artifacts stored within `S3Bucket` (default: "cloudformation/lard")
 
-    `StackName`: the name the Lard CloudFormation stack will be created with
+    `StackName`: the name the Lard CloudFormation stack will be created with (default: "Lard")
 
-    At a minimum you will need to change `S3Bucket`. The other values may be left as defaults.
+    `CodePipelineS3Bucket`: an existing readable/writable S3 bucket for CodePipeline artifact storage for use in Lard-based projects; if blank, automatically create a new bucket (default: value of `S3Bucket`)
+
+    `CodePipelineServiceRoleArn`: an existing CodePipeline service role for use in Lard-based projects; if blank, automatically create a new role (default: blank)
+
+    You will need to set `S3Bucket`. The other values may be left as their defaults unless you have a reason to change them.
 
 2. Run `./deploy.sh` to install gulp locally, build the packages, and deploy the Lard CloudFormation stack.
 
