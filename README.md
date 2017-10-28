@@ -2,7 +2,11 @@
 
 A collection of resources in support of AWS serverless continuous delivery.
 
-*More information to come...*
+For an example project demonstrating usage, please reference:
+* [lard-example-crud-api](https://github.com/lafiosca/lard-example-crud-api): an example project demonstrating a serverless REST API deployment using Lard
+* [lard-example-crud-web](https://github.com/lafiosca/lard-example-crud-web): an example project demonstrating a web application that interacts with [lard-example-crud-api](https://github.com/lafiosca/lard-example-crud-api)
+
+*More information to come, in article form...*
 
 ## Pre-Installation
 
@@ -38,3 +42,6 @@ A collection of resources in support of AWS serverless continuous delivery.
 
 3. Run `./deploy.sh` to install gulp locally, build the packages, and deploy the Lard CloudFormation stack.
 
+## Cleanup
+
+The resources created by this project should not inherently incur costs on your AWS account, but if you decide not to use Lard for any projects, it's possible you might want to delete them just to keep things tidy. To do this, enter [CloudFormation](https://console.aws.amazon.com/cloudformation/) in the AWS web console and delete the `Lard` stack (or whatever you changed the name to). If any other CloudFormation stacks are relying on your Lard stack with cross-stack references, CloudFormation will not allow you to delete it until you delete them.
