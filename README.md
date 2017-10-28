@@ -2,7 +2,7 @@
 
 A collection of resources in support of AWS serverless continuous delivery.
 
-For an example project demonstrating usage, please reference:
+For example projects demonstrating usage, please reference:
 * [lard-example-crud-api](https://github.com/lafiosca/lard-example-crud-api): an example project demonstrating a serverless REST API deployment using Lard
 * [lard-example-crud-web](https://github.com/lafiosca/lard-example-crud-web): an example project demonstrating a web application that interacts with [lard-example-crud-api](https://github.com/lafiosca/lard-example-crud-api)
 
