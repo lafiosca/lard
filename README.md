@@ -18,7 +18,11 @@ A collection of resources in support of AWS serverless continuous delivery.
 
 ## Installation
 
-1. Copy `config.sh.example` to `config.sh` and modify it to suit your needs:
+1. Clone the Lard repository and enter its directory:
+
+    `git clone https://github.com/lafiosca/lard.git && cd lard`
+
+2. Copy `config.sh.example` to `config.sh` and modify it to suit your needs:
 
     `S3Bucket`: an existing readable/writable S3 bucket for CloudFormation package artifact storage (no default; must be set)
 
@@ -32,5 +36,5 @@ A collection of resources in support of AWS serverless continuous delivery.
 
     You will need to set `S3Bucket`. The other values may be left as their defaults unless you have a reason to change them.
 
-2. Run `./deploy.sh` to install gulp locally, build the packages, and deploy the Lard CloudFormation stack.
+3. Run `./deploy.sh` to install gulp locally, build the packages, and deploy the Lard CloudFormation stack.
 
